@@ -53,7 +53,7 @@ pipeline {
             steps
             {
                 sh '''
-                    trivy image --severity CRITICAL ${IMAGE_TAG}  --exit-code 1 --format json -o ${env.GIT_COMMIT}.json
+                    trivy image --format json -o result.json --severity CRITICAL ${IMAGE_TAG}  --exit-code 1 
                 '''
             }
         }
