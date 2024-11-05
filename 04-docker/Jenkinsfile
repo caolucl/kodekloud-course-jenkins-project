@@ -12,12 +12,18 @@ pipeline {
 
         stage('Setup') {
             steps {
-                sh "pip install -r requirements.txt"
+                sh '''
+                    cd 04-docker
+                    pip install -r requirements.txt
+                '''
             }
         }
         stage('Test') {
             steps {
-                sh "pytest"
+                sh '''
+                    cd 04-docker
+                    pytest
+                '''
             }
         }
 
@@ -33,10 +39,13 @@ pipeline {
         {
             steps
             {
-                sh 'docker build -t ${IMAGE_TAG} .'
-                echo "Docker image build successfully"
-                sh 'docker image ls'
-                
+                sh '''
+                    cd 04-docker
+                    docker build -t ${IMAGE_TAG} .
+                    echo "Docker image build successfully"
+                    docker image ls
+                    
+                '''
             }
         }
 
