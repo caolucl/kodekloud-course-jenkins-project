@@ -13,6 +13,7 @@ pipeline {
         stage('Setup') {
             steps {
                 sh '''
+                    whoami
                     cd 04-docker
                     pip install -r requirements.txt
                 '''
