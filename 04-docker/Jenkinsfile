@@ -49,6 +49,14 @@ pipeline {
                 '''
             }
         }
+        stage('Vulnerability Scan - Docker Trivy') {
+            steps
+            {
+                sh '''
+                    trivy image --severity CRITICAL ${IMAGE_TAG}  --exit-code 1 --format json
+                '''
+            }
+        }
 
         stage('Push Docker Image')
         {
