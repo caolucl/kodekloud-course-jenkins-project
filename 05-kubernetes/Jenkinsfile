@@ -14,17 +14,15 @@ pipeline {
     stages {
         stage('Setup') {
             steps {
-                sh 'cd 05-kubernetes'
                 sh 'ls -la $KUBECONFIG'
                 sh 'chmod 644 $KUBECONFIG'
                 sh 'ls -la $KUBECONFIG'
-                sh "pip install -r requirements.txt"
+                sh "cd 05-kubernetes && pip install -r requirements.txt"
             }
         }
         stage('Test') {
             steps {
-                sh 'cd 05-kubernetes'
-                sh "pytest"
+                sh "cd 05-kubernetes && pytest"
             }
         }
 
@@ -40,8 +38,7 @@ pipeline {
         {
             steps
             {
-                sh 'cd 05-kubernetes'
-                sh 'docker build -t ${IMAGE_TAG} .'
+                sh 'cd 05-kubernetes && docker build -t ${IMAGE_TAG} .'
                 echo "Docker image build successfully"
                 sh 'docker image ls'
                 
@@ -60,11 +57,13 @@ pipeline {
         stage('Deploy to Staging')
         {
             steps {
-                sh 'cd 05-kubernetes'
-                sh 'kubectl config use-context developer-context'
-                sh 'kubectl apply -f k8s'
-                sh 'kubectl config current-context'
-                sh "kubectl set image deployment/flask-app flask-app=${IMAGE_TAG}"
+                sh '''
+                    cd 05-kubernetes
+                    kubectl config use-context developer-context
+                    kubectl apply -f k8s
+                    kubectl config current-context
+                    kubectl set image deployment/flask-app flask-app=${IMAGE_TAG}
+                '''
             }
         }
 
